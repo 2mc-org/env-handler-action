@@ -1,0 +1,22 @@
+name: "Configure Environment Handler"
+inputs:
+  secrets:
+    description: "GitHub Secrets"
+    type: string
+    default: "{}"
+  script:
+    description: "Script to run"
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run Script
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      env:
+        SECRETS_JSON: ${{ inputs.secrets }}
+      run: |
+        source ./setup_scripts.sh
+        bash -c 'set -e && ${{ inputs.script }}'
